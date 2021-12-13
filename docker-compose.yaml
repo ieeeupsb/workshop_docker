@@ -1,0 +1,38 @@
+version: "3" # optional since v1.27.0
+
+services:
+  server:
+    image: marantesss/ws-docker
+    container_name: server-container
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 8080:3000 # port mapping
+    environment:
+      DB_NAME: my_database
+      DB_USER: my_user
+      DB_PASSWORD: my_password
+    networks:
+      - backend
+
+  database:
+    image: postgres:14.1-alpine
+    container_name: database-container
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    ports:
+      - 5432 # notice no port mapping
+    environment: 
+      POSTGRES_DB: my_database
+      POSTGRES_USER: my_user
+      POSTGRES_PASSWORD: my_password
+    networks:
+      - backend
+
+volumes:
+  dbdata:
+
+networks:
+  backend:
+
